@@ -1,0 +1,9 @@
+FROM gitpod/workspace-full
+
+USER gitpod
+
+tasks:
+  - init: chmod +x mvnw && ./mvnw spring-boot:run
+ports:
+  - port: 9090
+    onOpen: open-browser

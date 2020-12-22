@@ -1,7 +1,6 @@
 package br.com.desafio.estoque.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 
 import javax.validation.Valid;
 
