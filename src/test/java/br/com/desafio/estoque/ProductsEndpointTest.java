@@ -42,6 +42,7 @@ public class ProductsEndpointTest {
 	public void getProductById() {
 		repository.save(product);
 		ResponseEntity<Products> response = rest.getForEntity("/operation/query/all", Products.class, repository.findById(product.getProductId()));
+		System.out.println("getProductById: " + response);
 		assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
 	}
 	
@@ -59,6 +60,7 @@ public class ProductsEndpointTest {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Products> request = new HttpEntity<>(product, headers);
 		ResponseEntity<String> response = rest.postForEntity("/operation/register", request , String.class );
+		System.out.println("postProduct: " + response);
 		assertThat(response.getStatusCode(), equalTo(HttpStatus.CREATED));
 	}
 	
@@ -81,6 +83,7 @@ public class ProductsEndpointTest {
 
 		BDDMockito.when(repository.findAll()).thenReturn(products);
 		ResponseEntity<String> response = rest.getForEntity("/operation/query/all", String.class);
+		System.out.println("getAllProducts: " + response);
 		assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
 	}
 
@@ -89,6 +92,14 @@ public class ProductsEndpointTest {
 		long id = 99L;
 		ResponseEntity<String> response = rest.exchange("/stock/update/{id}", HttpMethod.PUT, null , String.class, id);
 		System.out.println("updateStockWithInvalidId: " + response);
+		assertThat(response.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+	}
+
+	@Test
+	public void sellProductWithInvalidId() {
+		long id = 99L;
+		ResponseEntity<String> response = rest.exchange("/sell/{id}", HttpMethod.PUT, null , String.class, id);
+		System.out.println("sellProductWithInvalidId: " + response);
 		assertThat(response.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
 	}
 }

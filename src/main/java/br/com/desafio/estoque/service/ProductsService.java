@@ -14,4 +14,6 @@ public interface ProductsService {
 	Products searchProductById(Long id) throws NotFoundException;
 
 	Products updateStock(Long id, Integer sum) throws NotFoundException;
+
+	Products sellProduct(Long id, Integer subtraction) throws NotFoundException;
 }

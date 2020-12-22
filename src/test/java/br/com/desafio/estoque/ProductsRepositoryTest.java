@@ -52,7 +52,7 @@ public class ProductsRepositoryTest {
 	}
 	
 	@Test
-	public void createProductWithNegativeQuantity() {
+	public void createProductWithNegativeQuantityTest() {
 		Products negativeQuantity = new Products(price, -1, suplier, description);
 		thrown.expect(ConstraintViolationException.class);
 		thrown.expectMessage("Verifique se a quantidade é maior ou igual a zero.");
@@ -60,7 +60,7 @@ public class ProductsRepositoryTest {
 	}
 
 	@Test
-	public void createProductWithZeroPrice() {
+	public void createProductWithZeroPriceTest() {
 		Products zeroPrice = new Products(0, quantity, suplier, description);
 		thrown.expect(ConstraintViolationException.class);
 		thrown.expectMessage("Verifique se o preço é maior que zero.");
@@ -68,14 +68,14 @@ public class ProductsRepositoryTest {
 	}
 
 	@Test
-	public void createProductWithoutInformation() {
+	public void createProductWithoutInformationTest() {
 		Products noInformation = new Products(0, 0, null, null);
 		thrown.expect(ConstraintViolationException.class);
 		this.repository.save(noInformation);
 	}
 	
 	@Test
-	public void createProductWithSmallDescription() {
+	public void createProductWithSmallDescriptionTest() {
 		Products smallDescription = new Products(price, quantity, suplier, "Lorem Ipsum");
 		thrown.expect(ConstraintViolationException.class);
 		thrown.expectMessage("A descrição deve ter entre 15 a 500 caracteres.");
@@ -83,7 +83,7 @@ public class ProductsRepositoryTest {
 	}
 	
 	@Test
-	public void createProductWithoutDescription() {
+	public void createProductWithoutDescriptionTest() {
 		Products noDescription = new Products(price, quantity, suplier, null);
 		thrown.expect(ConstraintViolationException.class);
 		thrown.expectMessage("Descrição não pode estar em branco.");
@@ -91,7 +91,7 @@ public class ProductsRepositoryTest {
 	}
 
 	@Test
-	public void createProductWithSmallSuplier() {
+	public void createProductWithSmallSuplierTest() {
 		Products smallSuplier = new Products(price, quantity, "Lore", description);
 		thrown.expect(ConstraintViolationException.class);
 		thrown.expectMessage("O fornecedor deve ter entre 5 e 50 caracteres");
@@ -99,7 +99,7 @@ public class ProductsRepositoryTest {
 	}
 
 	@Test
-	public void createProductWithoutSuplier() {
+	public void createProductWithoutSuplierTest() {
 		Products emptySuplier = new Products(price, quantity, null, description);
 		thrown.expect(ConstraintViolationException.class);
 		thrown.expectMessage("Fornecedor não pode estar em branco");
@@ -107,10 +107,18 @@ public class ProductsRepositoryTest {
 	}
 
 	@Test
-	public void updateStock() {
+	public void updateStockTest() {
 		product.setQuantity((product.getQuantity() + 1));
 		this.repository.save(product);
 		assertThat(repository.findById(product.getProductId())).isPresent();
 		assertThat(product.getQuantity()).isEqualTo(2);
+	}
+
+	@Test
+	public void sellProductTest() {
+		product.setQuantity((product.getQuantity() - 1));
+		this.repository.save(product);
+		assertThat(repository.findById(product.getProductId())).isPresent();
+		assertThat(product.getQuantity()).isEqualTo(0);
 	}
 }

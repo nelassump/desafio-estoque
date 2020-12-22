@@ -49,4 +49,13 @@ public class ProductsServiceImplementation implements ProductsService{
 		products = repository.save(products);
 		return products;
 	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = MethodArgumentNotValidException.class)
+	public Products sellProduct(Long id, Integer subtraction) throws NotFoundException {
+		Products products = idExists(id);
+		products.setQuantity((products.getQuantity() - subtraction));
+		products = repository.save(products);
+		return products;
+	}
 }

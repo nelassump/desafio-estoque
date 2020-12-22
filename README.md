@@ -1,8 +1,8 @@
 # API Rest Desafio Estoque:
 
-API Rest para controlar os produtos venbdidos por sua empresa, assim como seu estoque.
+API Rest para controlar os produtos vendidos por sua empresa, assim como seu estoque.
 
-Construída em Java utilizando frameworks:
+Construída em Java 8 utilizando frameworks:
 - Swagger Ui
 - Spring Boot 
 

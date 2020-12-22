@@ -36,7 +36,7 @@ public class ProductResource {
 	@ApiResponses(value = {@ApiResponse(code = 201, message = "Produto cadastrado com sucesso.")})
 	@ApiImplicitParams({@ApiImplicitParam(name = "product", value = "Estrutura para cadastro de produto.", dataType = "CadastroProdutoDTO", required = true)
 	})
-	public ResponseEntity<Products> postProduct(@Valid @RequestBody Products product) {
+	public ResponseEntity<Products> registerProduct(@Valid @RequestBody Products product) {
 		Products products = service.createProduct(product);
 		return new ResponseEntity<>(products, HttpStatus.CREATED);
 	}
@@ -44,7 +44,8 @@ public class ProductResource {
 	@GetMapping("/query/by/{id}")
 	@ApiOperation(value = "Consulta produto por ID")
 	@ApiResponses(value = {@ApiResponse(code = 404, message = "Produto não Encontrado.")})
-	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "Código do produto:", dataType = "Long", required = true)})
+	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "Código do produto:", dataType = "Long", required = true)
+	})
 	public ResponseEntity<Products> getProductById(@PathVariable Long id) throws NotFoundException {
 		Products products = service.searchProductById(id);
 		return new ResponseEntity<>(products, HttpStatus.OK);
@@ -58,7 +59,6 @@ public class ProductResource {
 		@ApiImplicitParam(name = "field",defaultValue = "id", dataType = "String",value = "Ordenar por id/price/suplier:"),
 		@ApiImplicitParam(name = "sort", defaultValue = "asc",dataType = "String",value = "Ordenar por asc/desc:")
 	})
-
 	public ResponseEntity<Object> getAllProducts(
 			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "limit",defaultValue = "3") int limit,
@@ -68,16 +68,31 @@ public class ProductResource {
 	}
 
     @PutMapping("/stock/update/{id}")
-    @ApiResponses(value = {@ApiResponse(code = 404, message = "Produto Não Encontrado!")})
-    @ApiOperation(value = "Altera o estoque do produto por ID", notes = "Adiciona ao estoque atual quantidade informada.")
+    @ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Estoque atualizado com sucesso."),
+    		@ApiResponse(code = 404, message = "Produto Não Encontrado.")})
+    @ApiOperation(value = "Altera o estoque do produto por ID", notes = "Adiciona ao estoque atual a quantidade informada.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "Código do produto:", dataType = "Long", required = true),
-            @ApiImplicitParam(name = "quantity", value = "Quantidade a ser adicionada ao estoque:", dataType = "int", required = true)
+            @ApiImplicitParam(name = "sum", value = "Quantidade a ser adicionada ao estoque:", dataType = "int", required = true)
     })
-
-    public ResponseEntity<Products> putProduct(@PathVariable Long id, @RequestParam Integer sum) throws NotFoundException {
+    public ResponseEntity<Products> updateStock(@PathVariable Long id, @RequestParam Integer sum) throws NotFoundException {
         Products products = service.updateStock(id, sum);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
+
+	@PutMapping("sell/{id}")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Produto vendido com sucesso."),
+			@ApiResponse(code = 404, message = "Produto não encontrado.")})
+	@ApiOperation(value = "Executa operação de venda por ID", notes = "Subtrai do estoque atual a quantidade informada.")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "id", value = "Código do produto:", dataType = "Long", required = true),
+			@ApiImplicitParam(name = "subtraction", value = "Quantidade a ser subtraída do estoque:", dataType = "int", required = true)
+	})
+	public ResponseEntity<Void> sellProduct(@PathVariable Long id, Integer subtraction) throws NotFoundException  {
+		service.sellProduct(id, subtraction);
+		return ResponseEntity.noContent().build();
+	}
 
 }
