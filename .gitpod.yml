@@ -1,5 +1,6 @@
 tasks:
   - init: chmod +x mvnw && ./mvnw spring-boot:run
+  - command: gp await-port 9090 && gp preview $(gp url 9090)/swagger-ui.html
 ports:
-  - port: 9090
-    onOpen: open-browser $(gp url 9090)swagger-ui.html
+  - port:9090
+    onOpen: ignore
